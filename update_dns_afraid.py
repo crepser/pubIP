@@ -9,10 +9,12 @@ from pathlib import Path
 url = 'https://www.whatismyip.org/my-ip-address'
 ip_path = '/tmp/myip/current_ip'
 log_path = '/tmp/myip/log'
-update_dns = os.environ['UPDATE_DNS']
 
-if not update_dns:
-  print('You need to setup your UPDATE_DNS environment variable berfore launching this script')
+try:
+  os.environ['UPDATE_DNS']
+except KeyError:
+  print('You need to set UPDATE_DNS before running this script')
+  exit()
 
 try:
   req = r.get(url)
