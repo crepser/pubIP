@@ -4,11 +4,16 @@ import requests as r
 import re
 import datetime
 import os
-from pathlib import Path
 
 url = 'https://www.whatismyip.org/my-ip-address'
+root_path = '/tmp/myip'
 ip_path = '/tmp/myip/current_ip'
 log_path = '/tmp/myip/log'
+saved_ip = ''
+
+#create directory
+if not os.path.exists(root_path):
+  os.makedirs(root_path)
 
 try:
   os.environ['UPDATE_DNS']
@@ -24,14 +29,12 @@ try:
   else:
     log_file = open(log_path, 'w')
   
-  if os.path.isfile(log_path):
+  if os.path.isfile(ip_path):
     ip_file = open(ip_path, 'r')
-  else:
-    ip_file = open(ip_path, 'w')
-   
-  saved_ip = ip_file.read()
-  if ip != saved_ip:
+    saved_ip = ip_file.read()
     ip_file.close()
+
+  if ip != saved_ip:
     ip_file = open(ip_path, 'w')
     ip_file.write(ip)
     log_file.write('{} ip changed from {} to {} \n'.format(datetime.datetime.now(), saved_ip, ip))
